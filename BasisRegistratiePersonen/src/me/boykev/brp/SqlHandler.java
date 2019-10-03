@@ -5,6 +5,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
+import org.bukkit.entity.Player;
 
 public class SqlHandler {
 	private Main instance;
@@ -17,12 +22,14 @@ public class SqlHandler {
 		this.instance = main;
 	}
     
+    private UserManager um;
+    
     public void openConnection() throws SQLException, ClassNotFoundException {
     	db = new ConfigManager(instance);
     	host = db.getConfig().getString("database.host");
     	database = db.getConfig().getString("database.database");
     	port = db.getConfig().getInt("database.port");
-    	username = db.getConfig().getString("database.username");
+    	username = db.getConfig().getString("database.user");
     	password = db.getConfig().getString("database.password");
     if (con != null && !con.isClosed()) {
         return;
@@ -37,13 +44,51 @@ public class SqlHandler {
     }
 }
     
-	public void makeLog(String player, String type, Integer bedrag, String doelwit, String id, String flag) {
-		db = new ConfigManager(instance);
+    public boolean checkData() {
+    	db = new ConfigManager(instance);
+    	if(db.getConfig().getString("database.host").equals("-")) {
+    		System.out.print("Host is niet insteld voor SQL, Database wordt niet gebruikt!");
+    		return false;
+    	}
+    	if(db.getConfig().getString("database.database").equals("-")) {
+    		System.out.print("Databasenaam is niet insteld voor SQL, Database wordt niet gebruikt!");
+    		return false;
+    	}
+    	if(db.getConfig().getString("database.user").equals("-")) {
+    		System.out.print("Database-gebruiker is niet insteld voor SQL, Database wordt niet gebruikt!");
+    		return false;
+    	}
+    	if(db.getConfig().getString("database.password").equals("-")) {
+    		System.out.print("Database-Wachtwoord is niet insteld voor SQL, Database wordt niet gebruikt!");
+    		return false;
+    	}
+    	if(db.getConfig().getString("database.tabel").equals("-")) {
+    		System.out.print("Database-Table is niet insteld voor SQL, Database wordt niet gebruikt!");
+    		return false;
+    	}
+    	return true;
+    }
+    
+	public void updateData(Player player) {
+		if(this.checkData() == false) {
+			return;
+		}
 		String tabel = db.getConfig().getString("database.tabel");
+		db = new ConfigManager(instance);
+		um = new UserManager(instance, player);
+		Date now = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		if(this.checkUpdate(player.getUniqueId()) == format.format(now)) {
+			return;
+		}
+		String pn = um.getConfig().getString("PlayerName");
+		String age = um.getConfig().getString("Leeftijd");
+		String prov = um.getConfig().getString("Provintie");
+		String byear = um.getConfig().getString("geboortejaar");
         try {
             openConnection();
             Statement statement = con.createStatement();   
-            statement.executeUpdate("INSERT INTO " + tabel + " (player, type, bedrag, doelwit, TikID, flagged) VALUES ('" + player + "', '" + type + "', '" + bedrag + "','" + doelwit + "', '" + id + "', '" + flag + "');");
+            statement.executeUpdate("UPDATE " + tabel + " SET `lastupdate`= '" + format.format(now) + "', `playername`= '" + pn + "', `age`= '" + age + "', `provintie`= '" + prov + "', `geboortejaar`= '" + byear + "' WHERE `playeruuid`= '" + player.getUniqueId().toString() + "';");
             con.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -53,13 +98,15 @@ public class SqlHandler {
         
 	}
 	
-    public String checkInfo(String plot) {
+    public String checkUpdate(UUID uuid) {
+    	String tabel = db.getConfig().getString("database.tabel");
         try {     
         	openConnection();
             Statement statement = con.createStatement();   
-            ResultSet result = statement.executeQuery("SELECT * FROM KadasterRegister WHERE plot = '" + plot + "'");
+            ResultSet result = statement.executeQuery("SELECT lastupdate FROM " + tabel + " WHERE playeruuid = '" + uuid + "'");
             while (result.next()) {
-            	String type = result.getString("type");
+            	String type = result.getString("lastupdate");
+            	
             	return type;
             }
             con.close();
@@ -76,11 +123,16 @@ public class SqlHandler {
         
 	}
     
-	public void updatePlot(String plot, String info) {
+	public void insertUser(Player p) {
+		db = new ConfigManager(instance);
+		um = new UserManager(instance, p);
+		String tabel = db.getConfig().getString("database.tabel");
+		Date now = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         try {
             openConnection();
             Statement statement = con.createStatement();   
-            statement.executeUpdate("UPDATE KadasterRegister SET type = '" + info + "' WHERE plot = '" + plot + "'");
+            statement.executeUpdate("INSERT INTO `" + tabel + "`(`lastupdate`, `playername`, `playeruuid`) VALUES ('" + format.format(now) + "', '" + p.getName().toString() + "', '" + p.getUniqueId().toString() + "');");
             con.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
