@@ -1,0 +1,7 @@
+name: Minetopia-BRP
+version: 1.5
+main: me.boykev.brp.Main
+author: boykev
+commands:
+  brpset:
+    description: Main Commando
