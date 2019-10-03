@@ -47,6 +47,7 @@ public void LoadDefaults() {
     config.addDefault("database.user", "-");
     config.addDefault("database.password", "-");
     config.addDefault("database.database", "-");
+    config.addDefault("database.table", "-");
     config.options().copyDefaults(true);
     save();
 	
