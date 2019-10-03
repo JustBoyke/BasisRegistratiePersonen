@@ -23,7 +23,7 @@ public class CommandHandler implements CommandExecutor{
 				p.sendMessage(ChatColor.RED + "Niet genoeg argumenten! /brpset [type] [player]");
 				return false;
 			}
-			if(args[0].equalsIgnoreCase("setage")) {
+			if(args[0].equalsIgnoreCase("age")) {
 				if(!p.hasPermission("brp.setage")) {
 					p.sendMessage(ChatColor.RED + "Hier heb je geen permissies voor!");
 					return false;
@@ -38,7 +38,7 @@ public class CommandHandler implements CommandExecutor{
 				target.openInventory(InventoryManager.PrepareInv(target, "string"));
 				return false;
 			}
-			if(args[0].equalsIgnoreCase("setprov")) {
+			if(args[0].equalsIgnoreCase("prov")) {
 				if(!p.hasPermission("brp.setprov")) {
 					p.sendMessage(ChatColor.RED + "Hier heb je geen permissies voor!");
 					return false;
@@ -53,6 +53,7 @@ public class CommandHandler implements CommandExecutor{
 				target.openInventory(InventoryManager.prepareProvintie(target, "string"));
 				return false;
 			}
+			p.sendMessage(ChatColor.RED + "Dit is geen bestaand subcommando!");
 		}
 		return false;
 	}

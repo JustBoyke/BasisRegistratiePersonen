@@ -141,20 +141,7 @@ public class SqlHandler {
         }
         
 	}
-	
-	public void deletePlot(String plot) {
-        try {
-            openConnection();
-            Statement statement = con.createStatement();   
-            statement.executeUpdate("DELETE FROM KadasterRegister WHERE plot = '" + plot + "'");
-            con.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-	}
+
 	
 	
 }
