@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="D:/Boyke van Vugt/Documents/Java-API/Minecraft Development/Vault (1).jar"/>
 	<classpathentry kind="lib" path="D:/Boyke van Vugt/Documents/Java-API/Minecraft Development/MinetopiaSDBRel (6).jar"/>
 	<classpathentry kind="lib" path="D:/Boyke van Vugt/Documents/Java-API/Minecraft Development/LiteBans (3).jar"/>
+	<classpathentry kind="lib" path="D:/Boyke van Vugt/Documents/Java-API/Minecraft Development/1.14/ClientStats.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
