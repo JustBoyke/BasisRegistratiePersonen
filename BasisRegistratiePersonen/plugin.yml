@@ -5,3 +5,5 @@ author: boykev
 commands:
   brpset:
     description: Main Commando
+  brpregister:
+    description: Main Commando

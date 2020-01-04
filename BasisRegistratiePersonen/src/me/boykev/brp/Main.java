@@ -23,6 +23,7 @@ public class Main extends JavaPlugin implements Listener{
 		pm.registerEvents(new InventoryManager(this), this);
 		pm.registerEvents(new EventManager(this), this);
 		getCommand("brpset").setExecutor(new CommandHandler(this));
+		getCommand("brpregister").setExecutor(new CommandHandler(this));
 		if(!configFile.exists()) {
 			cm.LoadDefaults();
 			cm.save();

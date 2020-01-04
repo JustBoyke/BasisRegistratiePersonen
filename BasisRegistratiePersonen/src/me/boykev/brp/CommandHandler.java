@@ -13,8 +13,8 @@ public class CommandHandler implements CommandExecutor{
 		this.instance = main;
 	}
 	
-	@SuppressWarnings("unused")
 	private Main instance;
+	private UserManager um;
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(cmd.getName().equalsIgnoreCase("brpset")) {
@@ -54,6 +54,16 @@ public class CommandHandler implements CommandExecutor{
 				return false;
 			}
 			p.sendMessage(ChatColor.RED + "Dit is geen bestaand subcommando!");
+		}
+		if(cmd.getName().equalsIgnoreCase("brpregister")) {
+			Player p = (Player) sender;
+			um = new UserManager(instance, p);
+			if(um.getConfig().getString("Leeftijd") == null) {
+				p.sendMessage(ChatColor.GREEN + "Leeftijd scherm geopend voor de speler!");
+				p.openInventory(InventoryManager.PrepareInv(p, "string"));
+				return false;
+			}
+			p.sendMessage(ChatColor.RED + "Je hebt je al ingeschreven in de basisregistratie, wil je je gegevens laten wijzigen ga dan naar de gemeente!");
 		}
 		return false;
 	}

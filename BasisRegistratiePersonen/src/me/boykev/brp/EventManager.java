@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.onecraft.clientstats.ClientStats;
 import fr.onecraft.clientstats.ClientStatsAPI;
+import net.md_5.bungee.api.ChatColor;
 
 public class EventManager implements Listener{
 	
@@ -27,6 +28,7 @@ public class EventManager implements Listener{
 		ClientStatsAPI cstats = ClientStats.getApi();
 		sql = new SqlHandler(instance);
 		Player p = (Player) e.getPlayer();
+		@SuppressWarnings("unused")
 		int version = cstats.getProtocol(p.getUniqueId());
 		um = new UserManager(instance, p);
 		File configFile = new File(instance.getDataFolder() + File.separator + "users", p.getUniqueId().toString() + ".yml");
@@ -38,19 +40,10 @@ public class EventManager implements Listener{
 			um.editConfig().set("PlayerName", p.getName().toString());
 			um.save();
 			sql.insertUser(p);
-			if(version < 477) {
-				System.out.println("MC Version: " + version + " invopen skipped!");
-				return;
-			}
-			p.openInventory(InventoryManager.PrepareInv(p, "string"));
 			return;
 		}
 		if(um.getConfig().getString("Leeftijd") == null) {
-			if(version < 477) {
-				System.out.println("MC Version: " + version + " invopen skipped!");
-				return;
-			}
-			p.openInventory(InventoryManager.PrepareInv(p, "string"));
+			p.sendMessage(ChatColor.RED + "Je bent nog niet ingeschreven in de Basisregistratie. Om dit te doen doe /brpregister");
 			return;
 		}
 	}
